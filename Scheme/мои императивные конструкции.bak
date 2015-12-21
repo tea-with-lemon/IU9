@@ -1,0 +1,14 @@
+(define-syntax when 
+  (syntax-rules()
+    ((when x expr ...)
+     (if x 
+         (begin expr ...)))))
+(define-syntax unless 
+  (syntax-rules()
+    ((unless x expr ...)
+     (if (not x) (begin expr ...)))))
+(define-syntax while
+  (syntax-rules ()
+    ((while x expr ...)
+     (let loop ()
+       (if x (begin expr ... (loop)))))))

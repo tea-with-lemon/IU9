@@ -1,0 +1,4 @@
+(define-syntax my-let
+  (syntax-rules ()
+    ((my-let ((x v) ***) e ***)
+     ((lambda (x ***) e ***) v ***))))

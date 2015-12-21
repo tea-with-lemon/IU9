@@ -1,0 +1,30 @@
+(define-syntax trace-ex
+  (syntax-rules ()
+    ((_ expression)
+     (begin
+       (write (quote expression))
+       (display " => ") 
+       (let ((result expression))
+         (write result)
+         (newline)
+         result)))))
+
+
+(define (function-akkerman m n)
+  (cond
+    ((zero? m) (+ 1 n))
+    ((and (zero? n)(> m 0)) (function-akkerman (- m 1) 1))
+    ((and (> m 0) (> n 0)) (trace-ex(function-akkerman (- m 1) (function-akkerman m (- n 1)))))))
+
+(define memoize (lambda (f)
+                  (let ((lst '()))
+                    (lambda args
+                      (let ((match (assoc args lst)))
+                        (if match
+                            (cadr match)                  
+                            (let ((value (apply f args)))
+                              (set! lst (cons (list args value) lst))
+                              value)))))))
+
+
+(set! function-akkerman (memoize function-akkerman))

@@ -1,0 +1,4 @@
+(define-syntax my-if             ; macro name
+  (syntax-rules (then else)      ; literals it uses, if any
+    ((my-if e1 then e2 else e3)  ; pattern
+     (if e1 e2 e3))))
