@@ -22,16 +22,16 @@ def word_count(text):
 	w=len(text.split())
 	result=''
 	if not (args.c or args.m or args.l or args.w):
-		result=str(c)+' '+str(m)+' '+str(l)+' '+str(w)+' '
+		result="Bytes: "+str(c)+'\n'+"Chars: "+str(m)+'\n'+"Lines: "+str(l)+'\n'+"Words: "+str(w)
 	if args.c:
-		result+=str(c)+' '
+		result="Bytes: "+str(c)+'\n'
 	if args.m:
-		result+=str(m)+' '
+		result=result+"Chars: "+str(m)+'\n'
 	if args.l:
-		result+=str(l)+' '
+		result=result+"Lines: "+str(l)+'\n'
 	if args.w:
-		result+=str(w)+' '
-	return filename+' '+result
+		result=result+"Words: "+str(w)+'\n'
+	return filename+'\n'+result
 
 def count_file(filename):
 	try:
