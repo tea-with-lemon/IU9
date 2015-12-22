@@ -27,9 +27,11 @@ def printuy(text,file='stdin'):
 
 if args.files:
     for pattern in args.files:
-        for file in glob.iglob(pattern):
-            printuy(open(file).readlines(),file)
+        if len(glob.glob(pattern))==0:
+            sys.stderr.write("Error while opening file" + "\n")
+        else:
+            for file in glob.iglob(pattern):
+                printuy(open(file).readlines(),file)
 else:
     printuy(sys.stdin.readlines())
-    
                 
