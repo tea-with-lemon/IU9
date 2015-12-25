@@ -11,7 +11,7 @@ parser.add_argument('-w',action='store_true',help='количество слов
 
 args = parser.parse_args()      
 
-def word_count(text):
+def word_count(text, filename='stdin'):
 	#количество байт
 	c=sys.getsizeof(text)
 	#количество символов
@@ -38,9 +38,9 @@ def count_file(filename):
 		input=open(filename, 'r')
 		text=input.read()
 		input.close()
-		return word_count(text)
+		return word_count(text, filename)
 	except IOError:
-		print("File",filename,"not found!")
+		sys.stderr.write("File "+filename+" not found!\n")
 
 if args.files:
 	for filename in args.files:

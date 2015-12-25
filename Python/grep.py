@@ -18,7 +18,7 @@ def printuy(text,file='stdin'):
         if (args.i and re.search(args.pattern, line, re.IGNORECASE)) or (re.search(args.pattern, line)):
             how_match+=1
             if args.m:
-                if how_match == args.m+1:
+                if how_match > args.m:
                     break
             if args.n:
                 print(file,i,':',line)

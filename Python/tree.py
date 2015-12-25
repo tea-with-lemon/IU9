@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import os
 import argparse
 import sys
@@ -17,17 +19,17 @@ def print_dir(path, otstup=''):
                         output.close()
                 else:
                         print (otstup+'├── (dir)', os.path.basename(path))
-                        for name in os.listdir(path):
-                                fullname = os.path.join(path, name)
-                                if os.path.isdir(fullname):
-                                        print_dir(fullname, otstup + '│  ')
-                                elif not args.d:
-                                        if args.o:
-                                                output=open(args.o, 'a')
-                                                output.write(otstup+'│  ├── (file) '+name+'\n')
-                                                output.close()
-                                        else:
-                                                print (otstup+'│  ├── (file)', name)
+                for name in os.listdir(path):
+                        fullname = os.path.join(path, name)
+                        if os.path.isdir(fullname):
+                                print_dir(fullname, otstup + '│  ')
+                        elif not args.d:
+                                if args.o:
+                                        output=open(args.o, 'a')
+                                        output.write(otstup+'│  ├── (file) '+name+'\n')
+                                        output.close()
+                                else:
+                                        print (otstup+'│  ├── (file)', name)
         else:
                 sys.stderr.write("No such file or directory: "+path+'\n')
 
