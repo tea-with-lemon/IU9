@@ -10,10 +10,6 @@ def Razl(n):
             d+=1
     return array
 
-
-n=int(input())
-array=set(Razl(n))
-
 def Stroitel(n):
     global array
     for elem in array:
@@ -21,6 +17,8 @@ def Stroitel(n):
             print(n,"--",n//elem)
             Stroitel(n//elem)
 
+n=int(input())
+array=set(Razl(n))
 print("strict graph {\n")
 Stroitel(n)
 print("\n}")

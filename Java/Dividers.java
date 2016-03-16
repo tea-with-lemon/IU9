@@ -11,7 +11,8 @@ public class Dividers {
 }
 
 class Solution {
-    private ArrayList<Integer> array = new ArrayList<Integer>();
+    private ArrayList<Integer> array=new ArrayList<Integer>();
+    private Map<Integer,Integer> listInc=new HashMap<Integer,Integer>();
     private int[][] matrix;
     public Solution(int n) {
         array.add(1);
