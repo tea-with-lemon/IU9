@@ -1,0 +1,26 @@
+program f;
+uses crt;
+
+var k,i,n:integer;  {описание переменных}
+    s,x:string;
+
+begin
+write('Do kakogo natur. cisla sdelati posledovatelinosti? ');
+readln(n); {считываем натуральное число}
+
+x:='';
+for i:=1 to n do  {цикл от 1 до введенного числа }
+    begin
+    str(i,s);
+    x:=x+s;   {формируем строку из последовательности цифр}
+    end;
+
+clrscr;  {чистим экран}
+writeln (x); {выводим получившуюся последовательность цифр}
+writeln;
+
+write('Vvedite K: '); readln(k); {считываем K}
+writeln('Otvet: ',x[k]);         {выводим ответ}
+
+readln;
+end.      
