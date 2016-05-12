@@ -15,6 +15,9 @@ public:
     Point* operator[] (int i);
     void enterNew(Point* a, int index);
     ~BreakLineA();
+    BreakLineA(const BreakLineA &obj);
+    BreakLineA()  {};
+    BreakLineA & operator= (const BreakLineA &value);
 };
 
 #endif //LAB2_BREAKLINEA_H

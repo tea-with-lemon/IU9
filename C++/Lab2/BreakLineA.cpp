@@ -30,12 +30,22 @@ Point* BreakLineA::operator[](int i) {
     return NULL;
 }
 
-void BreakLineA::enterNew(Point *a, int index) {
-    line.insert(line.begin()+index, a);
+void BreakLineA::enterNew(Point *a, int index) { line.insert(line.begin()+index, a); }
+
+BreakLineA::~BreakLineA() { for (auto point: line) delete point; }
+
+BreakLineA::BreakLineA(const BreakLineA &obj) {
+    this->line.clear();
+    for (auto point: obj.line) {
+        Point* newPoint=new Point(point->x, point->y);
+        enterNew(newPoint, numPoints());
+    }
 }
 
-BreakLineA::~BreakLineA() {
-    for (auto point: line) {
-        delete point;
+BreakLineA & BreakLineA::operator= (const BreakLineA &value) {
+    this->line.clear();
+    for (auto point: value.line) {
+        Point* newPoint=new Point(point->x, point->y);
+        enterNew(newPoint, numPoints());
     }
 }

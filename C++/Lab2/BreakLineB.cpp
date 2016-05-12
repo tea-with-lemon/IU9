@@ -52,3 +52,23 @@ void BreakLineB::enterNew(Point *a, int index) {
     line=newLine;
     num++;
 }
+
+BreakLineB::BreakLineB(const BreakLineB &obj) {
+    num=obj.num;
+    line=new Point*[num];
+    for (int i=0; i<num; i++) {
+        Point* newPoint=new Point(obj.line[i]->x, obj.line[i]->y);
+        line[i]=newPoint;
+    }
+}
+
+BreakLineB & BreakLineB::operator= (const BreakLineB &value) {
+    for (int i=0; i<num; i++) delete line[i];
+    delete[] line;
+    num=value.num;
+    line=new Point*[num];
+    for (int i=0; i<num; i++) {
+        Point* newPoint=new Point(value.line[i]->x, value.line[i]->y);
+        line[i]=newPoint;
+    }
+}

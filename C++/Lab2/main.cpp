@@ -4,35 +4,68 @@
 
 using namespace std;
 
+void printLine(BreakLineA line) {
+    for (int i=0; i < line.numPoints(); i++) {
+        cout << "Point x: " << line[i]->x << " " << "Point y: " << line[i]->y <<endl;
+    }
+}
+
+void printLine(BreakLineB line) {
+    for (int i=0; i < line.numPoints(); i++) {
+        cout << "Point x: " << line[i]->x << " " << "Point y: " << line[i]->y <<endl;
+    }
+}
+
+void addPoints(BreakLineA line) {
+    line.enterNew(new Point(10,10), 0);
+    printLine(line);
+    cout << "width: " << line.sizeMinRect().first << " height: " << line.sizeMinRect().second << endl;
+}
+
+void addPoints(BreakLineB* line) {
+    line->enterNew(new Point(9,9), 0);
+    printLine(*line);
+    cout << "width: " << line->sizeMinRect().first << " height: " << line->sizeMinRect().second << endl;
+}
+
+
 int main() {
-    /*
     BreakLineA testA;
-    cout << "TEST A" << endl;
+    BreakLineB testB;
+
     testA.enterNew(new Point(0,2), 0);
     testA.enterNew(new Point(-7,5), 1);
     testA.enterNew(new Point(3,-2), 2);
     testA.enterNew(new Point(8,0), 3);
-    cout << "Min rectangle height & width: " << endl;
-    cout << testA.sizeMinRect().first << " " << testA.sizeMinRect().second << endl;
-    testA.numPoints();
-    if (testA[6]) cout << testA[6] << endl;
-    for (int i=0; i < testA.numPoints(); i++) {
-        cout << "Point x: " << testA[i]->x << " " << "Point y: " << testA[i]->y <<endl;
-    }
 
-    BreakLineB testB;
-    cout << "TEST B" << endl;
-    testB.enterNew(new Point(1,2), 0);
-    testB.enterNew(new Point(0,5), 0);
-    testB.enterNew(new Point(3,6), 0);
-    testB.enterNew(new Point(8,1), 0);
-    cout << "Min rectangle height & width: " << endl;
-    cout << testB.sizeMinRect().first << " " << testB.sizeMinRect().second << endl;
-    testB.numPoints();
-    if (testB[6]) cout << testB[6] << endl;
-    for (int i=0; i < testB.numPoints(); i++) {
-        cout << "Point x: " << testB[i]->x << " " << "Point y: " << testB[i]->y <<endl;
-    }
-    */
+    testB.enterNew(new Point(1,3), 0);
+    testB.enterNew(new Point(-8,6), 1);
+    testB.enterNew(new Point(5,0), 2);
+    testB.enterNew(new Point(10,1), 3);
+
+    cout << "Line A:" << endl;
+    printLine(testA);
+    cout << "MinRect:" << endl;
+    cout << "width: " << testA.sizeMinRect().first << " height: " << testA.sizeMinRect().second << endl;
+    addPoints(testA);
+    printLine(testA);
+
+    cout << "Line B:" << endl;
+    printLine(testB);
+    cout << "MinRect:" << endl;
+    cout << "width: " << testB.sizeMinRect().first << " height: " << testB.sizeMinRect().second << endl;
+    addPoints(&testB);
+    printLine(testB);
+
+    BreakLineA testA1;
+    BreakLineB testB1;
+
+    testA1=testA;
+    testB1=testB;
+    cout << "Copy testA: " << endl;
+    printLine(testA1);
+    cout << "Copy testB: " << endl;
+    printLine(testB1);
+
     return 0;
 }
