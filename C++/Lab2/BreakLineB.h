@@ -16,9 +16,10 @@ public:
     pair<int,int> sizeMinRect();
     Point* operator[] (int i);
     void enterNew(Point* a, int index);
-    ~BreakLineB();
+    virtual ~BreakLineB();
     BreakLineB(const BreakLineB &obj);
     BreakLineB & operator= (const BreakLineB &value);
+    void swap(BreakLineB &value);
 };
 
 

@@ -62,13 +62,16 @@ BreakLineB::BreakLineB(const BreakLineB &obj) {
     }
 }
 
+void BreakLineB::swap(BreakLineB &value) {
+    Point** buff=new Point*[value.line->numPoints()];
+    value.line=this->line;
+    this->line=buff;
+}
+
 BreakLineB & BreakLineB::operator= (const BreakLineB &value) {
-    for (int i=0; i<num; i++) delete line[i];
-    delete[] line;
-    num=value.num;
-    line=new Point*[num];
-    for (int i=0; i<num; i++) {
-        Point* newPoint=new Point(value.line[i]->x, value.line[i]->y);
-        line[i]=newPoint;
+    if (this != &value) {
+        BreakLineB tmp(value);
+        this->swap(tmp);
     }
+    return *this;
 }

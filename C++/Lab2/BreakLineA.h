@@ -14,10 +14,11 @@ public:
     pair<int,int> sizeMinRect();
     Point* operator[] (int i);
     void enterNew(Point* a, int index);
-    ~BreakLineA();
+    virtual ~BreakLineA();
     BreakLineA(const BreakLineA &obj);
     BreakLineA()  {};
     BreakLineA & operator= (const BreakLineA &value);
+    void swap(BreakLineA &value);
 };
 
 #endif //LAB2_BREAKLINEA_H
