@@ -4,111 +4,113 @@
 
 using namespace std;
 
-template <typename T>
 class Point {
 public:
-    Point(T x, T y);
+    Point(vector<int> &coords);
     double dist(Point point);
-    friend ostream& operator<< (ostream& os, Point<T> p) {
-        os << "(" << p.x << ", "<< p.y << ")";
+    friend ostream& operator<< (ostream& os, Point p) {
+        for (int i=0; i<p.coords.size(); i++) {
+            os << p.coords[i];
+        }
         return os;
     }
 private:
-    T x, y;
+    vector<int> coords;
 };
 
-template <typename T>
-double Point<T> :: dist(Point<T> point) {
-    return sqrt(((this->x-point.x)*(this->x-point.x))+(this->x-point.x)*(this->x-point.x));
+Point::Point(vector<int>& coords) {
+    this->coords = coords;
 }
 
-template <typename T>
-Point<T>::Point(T x, T y) {
-    this->x=x;
-    this->y=y;
+double Point::dist(Point point) {
+    int v=0;
+    for (int i=0; i<point.coords.size(); i++) {
+        v+=(this->coords[i]-point.coords[i])*(this->coords[i]-point.coords[i]);
+    }
+    return sqrt(v);
 }
 
-template<typename T>
+template<typename Point>
 class Polyline {
 private:
-    vector<Point<T>> line;
+    vector<Point> line;
     double dist;
 public:
-	Polyline <T>& operator<< (Point<T>& otherPoint);
-	Polyline <T>& operator>> (Point<T>& otherPoint);
-    Point<T>& operator[] (int i);
+	Polyline <Point>& operator<< (Point& otherPoint);
+	Polyline <Point>& operator>> (Point& otherPoint);
+    Point& operator[] (int i);
     int count();
     double size();
-	bool operator== (const Polyline<T>& otherLine);
-	bool operator!= (const Polyline<T>& otherLine);
-    bool operator< (const Polyline<T>& otherLine);
-    bool operator> (const Polyline<T>& otherLine);
-    bool operator<= (const Polyline<T>& otherLine);
-    bool operator>= (const Polyline<T>& otherLine);
-    friend ostream& operator<< (ostream& os, Polyline<T>& p) {
+	bool operator== (const Polyline<Point>& otherLine);
+	bool operator!= (const Polyline<Point>& otherLine);
+    bool operator< (const Polyline<Point>& otherLine);
+    bool operator> (const Polyline<Point>& otherLine);
+    bool operator<= (const Polyline<Point>& otherLine);
+    bool operator>= (const Polyline<Point>& otherLine);
+    friend ostream& operator<< (ostream& os, Polyline<Point>& p) {
         os << "length :" << p.dist << "   " << "line : " ;
-        for (int i = 0; i < p.size(); ++i) os << p[i] << " ";
+        for (int i = 0; i < p.size(); ++i) os << p[i] << ", ";
         return os;
     }
 };
 
-template<typename T>
-double Polyline<T>::size() {
+template<typename Point>
+double Polyline<Point>::size() {
     return line.size();
 }
 
-template<typename T>
-Polyline <T>& Polyline <T>::operator<< (Point<T>& otherPoint) {
+template<typename Point>
+Polyline <Point>& Polyline <Point>::operator<< (Point& otherPoint) {
     line.insert(line.begin(), otherPoint);
     if (!line.empty()) dist+=otherPoint.dist(line[1]);
     else dist =0;
     return *this;
 }
 
-template<typename T>
-Polyline <T>& Polyline <T>::operator>> (Point<T>& otherPoint) {
+template<typename Point>
+Polyline <Point>& Polyline <Point>::operator>> (Point& otherPoint) {
     line.push_back(otherPoint);
     if (!line.empty()) dist+=otherPoint.dist(line[line.size()-1]);
     else dist =0;
     return *this;
 }
 
-template<typename T>
-Point<T>& Polyline<T>::operator[] (int i) {
+template<typename Point>
+Point& Polyline<Point>::operator[] (int i) {
     return line[i];
 }
 
-template<typename T>
-int Polyline<T>::count() {
+template<typename Point>
+int Polyline<Point>::count() {
     return line.size();
 }
 
-template<typename T>
-bool Polyline <T>::operator== (const Polyline <T>& otherLine) {
+template<typename Point>
+bool Polyline <Point>::operator== (const Polyline <Point>& otherLine) {
     return (this->dist == otherLine.dist);
 }
 
-template<typename T>
-bool Polyline <T>::operator!= (const Polyline <T>& otherLine) {
+template<typename Point>
+bool Polyline <Point>::operator!= (const Polyline <Point>& otherLine) {
     return (this->dist != otherLine.dist);
 }
 
-template<typename T>
-bool Polyline <T>::operator< (const Polyline<T>& otherLine) {
+template<typename Point>
+bool Polyline <Point>::operator< (const Polyline<Point>& otherLine) {
     return (this->dist < otherLine.dist);
 }
 
-template<typename T>
-bool Polyline <T>::operator<= (const Polyline<T>& otherLine) {
+template<typename Point>
+bool Polyline <Point>::operator<= (const Polyline<Point>& otherLine) {
     return (this->dist <= otherLine.dist);
 }
 
-template<typename T>
-bool Polyline <T>::operator> (const Polyline<T>& otherLine) {
+template<typename Point>
+bool Polyline <Point>::operator> (const Polyline<Point>& otherLine) {
     return (this->dist > otherLine.dist);
 }
 
-template<typename T>
-bool Polyline <T>::operator>= (const Polyline<T>& otherLine) {
+template<typename Point>
+bool Polyline <Point>::operator>= (const Polyline<Point>& otherLine) {
     return (this->dist >= otherLine.dist);
 }
