@@ -9,9 +9,11 @@ public:
     Point(vector<int> &coords);
     double dist(Point point);
     friend ostream& operator<< (ostream& os, Point p) {
-        for (int i=0; i<p.coords.size(); i++) {
-            os << p.coords[i];
+        os << "(" << p.coords[0];
+        for (int i=1; i<p.coords.size(); i++) {
+            os << ", " << p.coords[i];
         }
+        os << ")";
         return os;
     }
 private:
@@ -48,8 +50,9 @@ public:
     bool operator<= (const Polyline<Point>& otherLine);
     bool operator>= (const Polyline<Point>& otherLine);
     friend ostream& operator<< (ostream& os, Polyline<Point>& p) {
-        os << "length :" << p.dist << "   " << "line : " ;
-        for (int i = 0; i < p.size(); ++i) os << p[i] << ", ";
+        os << "length: " << p.dist << endl << "line: " ;
+        os << p[0];
+        for (int i = 1; i < p.size(); ++i) os << ", " << p[i];
         return os;
     }
 };
@@ -62,8 +65,9 @@ double Polyline<Point>::size() {
 template<typename Point>
 Polyline <Point>& Polyline <Point>::operator<< (Point& otherPoint) {
     line.insert(line.begin(), otherPoint);
-    if (!line.empty()) dist+=otherPoint.dist(line[1]);
-    else dist =0;
+    if (!line.empty())
+        dist += otherPoint.dist(line[0]);
+    else dist = 0;
     return *this;
 }
 
