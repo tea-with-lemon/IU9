@@ -65,17 +65,14 @@ double Polyline<Point>::size() {
 template<typename Point>
 Polyline <Point>& Polyline <Point>::operator<< (Point& otherPoint) {
     line.insert(line.begin(), otherPoint);
-    if (!line.empty())
-        dist += otherPoint.dist(line[0]);
-    else dist = 0;
+    dist += otherPoint.dist(line[0]);
     return *this;
 }
 
 template<typename Point>
 Polyline <Point>& Polyline <Point>::operator>> (Point& otherPoint) {
     line.push_back(otherPoint);
-    if (!line.empty()) dist+=otherPoint.dist(line[line.size()-1]);
-    else dist =0;
+    dist+=otherPoint.dist(line[line.size()-1]);
     return *this;
 }
 
