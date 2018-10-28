@@ -57,14 +57,14 @@ class PracticePage extends Component {
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>
-                        {this.state.practice.map((manager,index) => {
+                        {this.state.practice.map((practice,index) => {
                             return <Table.Row onClick={()=>{
                                 this.setState({showRedact:!this.state.showRedact,redactNmb:index});
                             }}>
                                 <Table.Cell> {index+1} </Table.Cell>
                                 {this.state.fields.map(field => {
                                     return <Table.Cell>
-                                        {!!manager[field] ? manager[field] : ''}
+                                        {!!practice[field] ? practice[field] : ''}
                                     </Table.Cell>
                                 })}
                             </Table.Row>

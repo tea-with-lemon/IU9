@@ -18,11 +18,12 @@ router.post('/update',(req,res)=>{
     pool.getConnection((err,connection)=>{
         if(err) throw err;
         console.log(req.body);
-        connection.query("update Practice set ? where TreatmentNumber=?",[req.body.practice,req.body.number],(error,result)=>{
+        let query = connection.query("update Practice set ? where TreatmentNumber=?",[req.body.practice,req.body.number],(error,result)=>{
             connection.release();
-            if(error) throw error;
-            res.json({practice:result})
+            if(error) return res.json({ok:false,msg:error.code});
+            res.json({ok:true})
         })
+        console.log(query.sql)
     })
 });
 

@@ -49,10 +49,9 @@ class PracticeEditForm extends Component {
                 }
             })
             .catch(err => alert(err))
-    }
+    };
 
     handleDelete = () => {
-        alert("delete")
         this.api.fetch('/practice/delete',{
             method:"POST",
             body:JSON.stringify(this.state.number)
