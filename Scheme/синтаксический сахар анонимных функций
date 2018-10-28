@@ -1,0 +1,7 @@
+(define-syntax &
+  (syntax-rules ()
+    ((_ exprs ...) (let loop ((args '())
+                              (body '(exprs ...)))
+                     (if (equal? (car body) '->)
+                         (eval (list 'lambda  (reverse args) (cons 'begin (cdr body))) (interaction-environment))
+                         (loop (cons (car body) args) (cdr body)))))))

@@ -1,0 +1,190 @@
+; A simple parser for model stack language from the 3rd task; Just ok?
+; TODO: add `classifiers` like `program`, `article` etc.?
+
+(load "source.scm")
+
+; List of numbers as basic grammar:
+;
+; S -> epsilon | TS
+; T -> n | (S)
+
+; <Program>  ::= <Articles> <Body> .
+; <Articles> ::= <Article> <Articles> | .
+; <Article>  ::= define word <Body> end .
+; <Body>     ::= if <Body> endif | integer <Body> | word Body | .
+
+; Terminals: integer, word, if, endif, define, end
+
+; Допускает ли эта грамматика запись слов между определениями процедур? -- Нет.
+
+(define (parse tokens)
+  (call-with-current-continuation
+   (lambda (fail)
+     (define src (make-source tokens '$))
+     ;;
+     (define (parse-$)
+       (cond
+         ((eq? (peek src) '$) '())
+         (else (fail #f)))) ; '$-failed))))
+     ;;
+     (define (word? t) 
+       (and (symbol? t)
+            (not (memq t '(define end if endif $)))))
+     ;;
+     (define (parse-word)
+       (cond
+         ((word? (peek src)) (next src))
+         (else (fail #f)))) ; 'word-failed))))
+     ;;
+     (define (parse-body)
+       (cond
+         ((eq? 'if  (peek src))
+          (next src)
+          (let ((body (parse-body)))
+            (cond
+              ((eq? 'endif (peek src)) 
+               (next src)
+               (cons (list 'if body) (parse-body)))
+              (else (fail #f))))) ; 'if-failed)))))
+         ;;
+         ((integer? (peek src)) (cons (next src) (parse-body)))
+         ((word?    (peek src)) (cons (next src) (parse-body)))
+         (else '()))) ; Always succeds
+     ;;
+     (define (parse-article)
+       (let ((word (parse-word))
+             (body (parse-body)))
+         (cond
+           ((eq? (next src) 'end) (list word body))
+           (else (fail #f))))) ;'article-failed)))))
+     ;;
+     (define (parse-articles)
+       (cond
+         ((eq? (peek src) 'define)
+          (next src)
+          (let ((article  (parse-article))
+                (articles (parse-articles)))
+            (cons article articles)))
+         (else '()))) ; Always succeeds
+     ;;
+     (let ((articles (parse-articles))
+           (body     (parse-body)))
+       (parse-$)
+       (list articles body))
+     ; (list 'program
+     ;      (list 'articles articles)
+     ;      (list 'body     body)))
+     )))
+
+; Tests
+
+(define test-exprs
+  (quote (
+   (parse #(1 2 +))
+   (parse #(x dup 0 swap if drop -1 endif))
+   
+   (parse #(define abs 
+             dup 0 < 
+             if neg endif 
+             end 
+             9 abs 
+             -9 abs))
+   
+   (parse #(define =0? dup 0 = end 
+             define <0? dup 0 < end 
+             define signum 
+             =0? if exit endif 
+             <0? if drop -1 exit endif 
+             drop 
+             1 
+             end 
+             0 signum 
+             -5 signum 
+             10 signum))
+   
+   (parse #(define -- 1 - end 
+             define =0? dup 0 = end 
+             define =1? dup 1 = end 
+             define factorial 
+             =0? if drop 1 exit endif 
+             =1? if drop 1 exit endif 
+             dup -- 
+             factorial 
+             * 
+             end 
+             0 factorial 
+             1 factorial 
+             2 factorial 
+             3 factorial 
+             4 factorial))
+   
+   (parse #(define =0? dup 0 = end 
+             define =1? dup 1 = end 
+             define -- 1 - end 
+             define fib 
+             =0? if drop 0 exit endif 
+             =1? if drop 1 exit endif 
+             -- dup 
+             -- fib 
+             swap fib 
+             + 
+             end 
+             define make-fib 
+             dup 0 < if drop exit endif 
+             dup fib 
+             swap -- 
+             make-fib 
+             end 
+             10 make-fib))
+   
+   (parse #(define =0? dup 0 = end 
+             define gcd 
+             =0? if drop exit endif 
+             swap over mod 
+             gcd 
+             end 
+             90 99 gcd 
+             234 8100 gcd))
+   
+   ; TODO Nested IFs (to be Ok)
+   
+   (parse #(if op1 if op2 op3 endif op4 endif))
+   (parse #(if if op1 op2 op3 endif endif))
+   (parse #(define w1 if op1 if op2 op3 endif op4 endif end op5 w1))
+   
+   ; TODO Nested articles and other wrong sequences to fail the parsing
+   
+   (parse #(define outer 
+             define inner w1 w2 end 
+             w3 inner w4 
+             end 
+             outer)) ; nested articles
+   
+   (parse #(define word w1 w2 w3)) ; definition isn't closed
+   (parse #(if w1 w2 w3))          ; `if` isn't closed
+   (parse #(w1 w2 w3 end))         ; `end` without `define`
+   
+   ))) ; End of tests
+
+(define tests 
+  (map 
+    (lambda (te) (eval te (interaction-environment)))
+    test-exprs))
+tests
+
+; (load "scm2graphviz-upd.scm") ; Is not suitable for this tree
+; Export to graphviz: postponed
+
+(define (range a b)
+  (if (< a b)
+      (cons a (range (+ a 1) b))
+      '()))
+
+(define (write-tests)
+  (define (write-test i t)
+    (with-output-to-file (number->string i)
+      (lambda ()
+        (write t))))
+  (for-each write-test
+            (range 1 (+ (length test-exprs) 1))
+            test-exprs))

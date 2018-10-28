@@ -1,0 +1,19 @@
+; Объявление процедуры с мемоизацией результатов
+;(use-syntax (ice-9 syncase))
+
+(define-syntax define-memoized
+  (syntax-rules ()
+    ((define-memoized (f args ...) body)
+     (define f (memoize (eval (list 'lambda (list 'args ...) 'body) (interaction-environment)))))
+    ((define-memoized f body)
+     (define f (memoize (eval 'body (interaction-environment)))))))
+
+(define memoize (lambda (f)
+                  (let ((lst '()))
+                    (lambda args
+                      (let ((match (assoc args lst)))
+                        (if match
+                            (cadr match)                  
+                            (let ((value (apply f args)))
+                              (set! lst (cons (list args value) lst))
+                              value)))))))

@@ -1,0 +1,66 @@
+;hex-num ::= "0x"num | "0X"num
+;num ::= digit | digit num
+;digit ::= 0 | 1 | ... | 9
+
+(define (digit d)
+  (cond
+    ((char-numeric? d) (- (char->integer d) (char->integer #\0)))
+    (else (+ 10 (- (char->integer (char-downcase d)) (char->integer #\a))))))
+
+(define (check num)
+  (cond
+    ((null? num) #t)
+    ((and (> (digit (car num)) -1) (< (digit (car num)) 16)) (check (cdr num)))
+    (else #f)))
+
+(define (check-hex num)
+  (let ((xs (string->list num)))
+    (cond
+      ((< (length xs) 3) #f)
+      ((or
+        (and (equal? (car xs) #\0) (equal? (cadr xs) #\X))
+        (and (equal? (car xs) #\0) (equal? (cadr xs) #\x))) (check (cddr xs)))
+      (else #f))))
+
+(define (perevod num)
+  (define (gorner num buf)
+    (cond
+      ((null? num) buf)
+      (else (gorner (cdr num) (+ (* buf 16) (digit (car num)))))))
+  (gorner num 0))
+
+(define (scan-hex num)
+  (cond
+    ((check-hex num) (perevod (cddr (string->list num))))
+    (else #f)))
+
+(define (del-whitespace str word buf)
+  (cond
+    ((and (null? str) (null? word)) buf)
+    ((and (null? str) (not (null? word))) (reverse (cons (reverse word) buf)))
+    ((and (char-whitespace? (car str)) (null? word)) (del-whitespace (cdr str) word buf))
+    ((and (char-whitespace? (car str)) (not (null? word))) (del-whitespace (cdr str) '() (cons (reverse word) buf)))
+    (else (del-whitespace (cdr str) (cons (car str) word) buf))))
+
+(define (scan-many-hexs nums)
+  (define (helper xs buf)
+    (cond
+      ((null? xs) (reverse buf))
+      ((equal? (scan-hex (list->string (car xs))) #f) #f)
+      (else (helper (cdr xs) (cons (scan-hex (list->string (car xs))) buf)))))
+  (helper (del-whitespace (string->list nums) '() '()) '()))
+
+
+(check-hex "0x1")   ;⇒ #t
+(check-hex "0X2A")  ;⇒ #t
+(check-hex "0XFFF") ;⇒ #t
+(check-hex "0X025") ;⇒ #t
+(check-hex "123")   ;⇒ #f
+
+(scan-hex "0x0")    ;⇒ 0
+(scan-hex "0X10A")  ;⇒ 266
+(scan-hex "0x1")    ;⇒ 1
+(scan-hex "12")     ;⇒ #f
+
+(scan-many-hexs "\t0x1\t\t0x2\n0xff00") ;⇒ (1 2 65280)
+(scan-many-hexs "0x0, 123") ;⇒ #f

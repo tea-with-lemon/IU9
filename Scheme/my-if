@@ -1,0 +1,23 @@
+(define-syntax my-if           ; Объявляем имя синтаксической конструкции
+  (syntax-rules (then else)    ; описываем правила: в первом списке -- (then else) --
+    ;   перечисляем слова, которые будут невычисляемыми, а ля "зарезервированные слова"
+    ; в последующих списках описываются шаблоны, которые будет обрабатывать макросом
+    ;   и собственно обработчики:
+    
+    ((_ condition then on-true else on-false)  ; здесь описываем шаблон конструкции: _ -- сюда подставляется имя макроса,
+     ;   можно написать my-if вместо _ , без разницы
+     ;   then и else как мы описали раньше просто слово,
+     ;   condition, on-true и on-false -- так сказать локальные переменные макроса,
+     ;   выражения, переданные в них -- вычисляемые
+     (if condition on-true on-false))  ; а это обработчик шаблона. шаблонов может быть несколько, например можно добавить еще 2:
+    ((_ condition then on-true)
+     (if condition on-true))
+    ((_ condition else on-false)
+     (if (not condition) on-false))
+    ))
+
+
+(define (my-if cond then else)
+  (if (and cond (not (eq? 0 cond))) then else)
+  (_ cond then)
+  (and cond (not (eq? 0 cond)) then))

@@ -1,0 +1,84 @@
+(define i 0)
+(define (make-source s)
+  (set! i 0)
+  (cond
+    ((list? s) (list->vector s))
+    ((string? s) (list->vector (string->list s)))
+    ((vector? s) s)))
+ 
+(define (peek f)
+  (if (>= i (vector-length f)) #f (vector-ref f i)))
+ 
+(define (next f)
+  (begin
+    (set! i (+ i 1))
+    (if (>= (- i 1) (vector-length f)) #f (vector-ref f (- i 1)))))
+ 
+(define (parse vec)
+ 
+  (define error 0)
+ 
+  (define s (make-source vec))
+ 
+  (define (programm)
+    (list (articles) (body)))
+ 
+  (define (articles)
+    (let ((c (peek s)))
+      (if (equal? c 'define)
+          (let ((t (article)) (p (articles)))
+            (if (null? p)
+                (list t)
+                (append (list t) p)))
+          '())))
+ 
+  (define (article)
+    (let ((p (next s)) (c (next s)) (artbody (body)) (endart (next s)))
+      (if (equal? endart `end)
+          (list c artbody)
+          (error #f))))
+ 
+  (define (body)
+    (let loop ((res '()))
+      (let ((c (next s)))
+        (cond
+          ((equal? c 'define) (error #f))
+          ((equal? (peek s) 'end) (reverse (cons c res)))
+          ((equal? (peek s) 'endif) (reverse (cons c res)))
+          ((equal? (peek s) #f) (reverse res))
+          ((equal? c 'if) (let ((ifbody (list (loop '())))) (if (equal? (peek s) 'endif) (loop (cons (cons c ifbody) res)) (error #f))))
+          ((or (number? c) (symbol? c)) (loop (cons c res)))))))
+ 
+  (call-with-current-continuation
+   (lambda (escape)
+     (begin
+       (set! error escape)
+       (programm)))))
+ 
+(parse #(1 2 +)); ⇒ (() (1 2 +))
+(parse #(x dup 0 swap if drop -1 endif))
+;⇒ (() (x dup 0 swap (if (drop -1))))
+(parse #( define -- 1 - end
+           define =0? dup 0 = end
+           define =1? dup 1 = end
+           define factorial
+           =0? if drop 1 exit endif
+           =1? if drop 1 exit endif
+           dup --
+           factorial
+           *
+           end
+           0 factorial
+           1 factorial
+           2 factorial
+           3 factorial
+           4 factorial ))
+;⇒
+;(((-- (1 -))
+;  (=0? (dup 0 =))
+;  (=1? (dup 1 =))
+;  (factorial
+;   (=0? (if (drop 1 exit)) =1? (if (drop 1 exit)) dup -- factorial *)))
+; (0 factorial 1 factorial 2 factorial 3 factorial 4 factorial))
+(parse #( define w w1 w1 w )) ; =>#f
+(parse #(x dup 0 swap if drop -1 )) ; =>#f

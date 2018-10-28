@@ -1,0 +1,40 @@
+;(use-syntax (ice-9 syncase))
+(define-syntax lazy-cons
+  (syntax-rules ()
+    ((_ a b) (cons a (delay b)))))
+(define lazy-car car) 
+(define (lazy-cdr p) (force (cdr p)))
+(define (lazy-ref xs k)
+  (if (zero?  k ) (lazy-car xs)
+      (lazy-ref (lazy-cdr xs)( - k 1))))
+
+(define (lazy-head xs k)
+  (define (helper xs k i)
+  ( if (equal? k 1)
+       (cons (lazy-car xs) '())
+       (if ( zero? i)
+  (cons (lazy-car xs) (helper (lazy-cdr xs) (- k 1) 1))
+  (cons (car xs) (helper (lazy-cdr xs) (- k 1) 1)))))
+  (helper xs k 0))
+(define naturals
+  (letrec ((iter (lambda(n)   (begin (lazy-cons n (iter ( + n 1)))) )))  (iter 0 )))
+
+(define (maps proc xs)
+  (if (null? xs)
+      (list)
+      (cons (proc (car xs))
+            (maps proc (cdr xs)))))
+(define (lazy-map proc . xss)
+  (define (helper yss)
+    (if (null? (car yss))
+        (list)
+        (lazy-cons (apply proc (maps car yss))
+              (helper (maps lazy-cdr yss)))))
+  (helper xss))
+
+
+(define (lazy-filter pred? xs)
+  (if (pred? (lazy-car xs))
+      (lazy-cons (lazy-car xs) (lazy-filter pred? (lazy-cdr xs)))
+      (lazy-filter pred? (lazy-cdr xs))))
+      
