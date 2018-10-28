@@ -1,5 +1,0 @@
-;(use-syntax (ice-9 syncase))
-(define-syntax my-let-1
-  (syntax-rules ()
-    ((my-let-1 (v ...) b)
-     (let ((v 1) ...) b))))
