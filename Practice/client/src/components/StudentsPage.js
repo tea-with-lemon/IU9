@@ -10,8 +10,8 @@ class StudentsPage extends Component {
         this.state = {
             msg : 'Студенты :',
             students : [],
-            headers : ['Имя', 'Фамилия' ,'Отчество','Дата рождения','Дата поступления','Курс','Группа','Телефон','Почта'],
-            fields : ['FirstName','LastName','FName', 'BirthDate', 'Entrance', 'Course', 'Group', 'Phone', 'Email'],
+            headers : ['Имя', 'Фамилия' ,'Отчество','Дата рождения','Дата поступления','Курс','Группа','Телефон','Почта','Идентификатор'],
+            fields : ['FirstName','LastName','FName', 'BirthDate', 'Entrance', 'Course', 'Group', 'Phone', 'Email','StudentID'],
             showRedact : false,
             redactNmb : 0,
         }
@@ -36,7 +36,7 @@ class StudentsPage extends Component {
 
     render() {
         const editForm = this.state.showRedact ? (
-            <div><UserEditForm valuse={this.state.redactNmb} user={this.state.students[this.state.redactNmb]} onSubmit={this.getStudents}/></div>
+            <div><UserEditForm user={this.state.students[this.state.redactNmb]} onSubmit={this.getStudents}/></div>
         ):(
             null
         );

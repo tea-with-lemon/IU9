@@ -1,42 +1,27 @@
 import React, { Component } from 'react';
 import logo from '../logo.svg';
 import '../App.css';
+import {Tab} from "semantic-ui-react";
+import StudentsPage from "./StudentsPage";
+import CompaniesPage from "./CompaniesPage";
+import ManagersPage from "./ManagersPage";
+import PracticePage from "./PracticePage";
+import GroupPage from "./GroupPage";
 
 class HomePage extends Component {
     constructor(){
         super();
-        this.state = {
-            msg : 'Hello, World!'
-        }
+        this.panes = [
+            { menuItem: 'Студенты', render: () => <Tab.Pane attached={false}><StudentsPage/></Tab.Pane> },
+            { menuItem: 'Компании', render: () => <Tab.Pane attached={false}><CompaniesPage/></Tab.Pane> },
+            { menuItem: 'Руководители', render: () => <Tab.Pane attached={false}><ManagersPage/></Tab.Pane> },
+            { menuItem: 'Практика', render: () => <Tab.Pane attached={false}><PracticePage/></Tab.Pane> },
+            { menuItem: 'Группы', render: () => <Tab.Pane attached={false}><GroupPage/></Tab.Pane> },
+        ]
     }
-
-    componentDidMount(){
-        this.setState({msg:"new"});
-        fetch("/test")
-            .then(data=>data.json())
-            .then(json => this.setState({msg:JSON.stringify(json)}))
-            .catch(err => alert(err))
-    }
-
     render() {
         return (
-            <div className="App">
-                <header className="App-header">
-                    <img src={logo} className="App-logo" alt="logo" />
-                    <p>
-                        Edit <code>src/App.js</code> and save to reload.
-                    </p>
-                    <a
-                        className="App-link"
-                        href="https://reactjs.org"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        {this.state.msg}
-                    </a>
-                    <button onClick={()=>this.setState({msg:"new msg"})}>baton</button>
-                </header>
-            </div>
+            <Tab menu={{pointing:true}} panes={this.panes}/>
         );
     }
 }

@@ -55,15 +55,32 @@ class UserEditForm extends Component {
     }
 
     handleChange(e){
-        console.log(e.target.name);
-        console.log(e.target.value);
         this.state.editedUser[e.target.name] = e.target.value;
         this.forceUpdate()
     }
 
+    handleDelete = (e) => {
+        e.preventDefault();
+        this.api.fetch('/students/delete',{
+            method: "POST",
+            body:JSON.stringify({
+                id:this.state.user.StudentID
+            })
+        })
+            .then(response=>{
+                if(response.ok){
+                    this.props.onSubmit();
+                }else{
+                    alert(response.msg)
+                }
+            })
+            .catch(err => alert(err))
+    }
+
+
     render() {
         return (
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
                 <Form.Group widths='equal'>
                     <Form.Input fluid name="FirstName" label='Имя' value={this.state.editedUser.FirstName} onChange={this.handleChange}/>
                     <Form.Input fluid name="LastName" label='Фамилия' value={this.state.editedUser.LastName} onChange={this.handleChange}/>
@@ -75,10 +92,19 @@ class UserEditForm extends Component {
                     <Form.Input fluid name="Entrance" label='Год поступления' value={this.state.editedUser.Entrance} onChange={this.handleChange}/>
                 </Form.Group>
                 <Form.Group widths='equal'>
-                    <Form.Select fluid name="Course" label="Курс" options={this.courseOptions} value={!!this.state.editedUser.Course ? this.state.editedUser.Course : 1} onChange={this.handleChange}/>
-                    <Form.Select fluid name="Group" label="Группа" options={this.groupOptions} value={!!this.state.editedUser.Group ? this.state.editedUser.Group : 1} onChange={this.handleChange}/>
+                    <Form.Select fluid name="Course" placeholder={this.state.editedUser.Course} label="Курс" options={this.courseOptions} onChange={(e,{value}) => {
+                        this.state.editedUser.Course = value;
+                        this.forceUpdate()
+                    }}/>
+                    <Form.Select fluid name="Group" placeholder={this.state.editedUser.Group} label="Группа" options={this.groupOptions} onChange={(e,{value}) => {
+                        this.state.editedUser.Group = value;
+                        this.forceUpdate()
+                    }}/>
                 </Form.Group>
-                <Form.Button content='Обновить'/>
+                <Form.Group >
+                    <Form.Button content='Обновить' onClick={this.handleSubmit}/>
+                    <Form.Button content='Удалить' onClick={this.handleDelete}/>
+                </Form.Group>
             </Form>
         );
     }

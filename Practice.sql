@@ -56,7 +56,6 @@ create table `Manager`
  `FirstName`      nvarchar(50) not null,
  `LastName`       nvarchar(50) not null,
  `FName`	        nvarchar(50),
- `Head`           bool,
 
  unique key `AK_ManagerPhone` (`Phone`),
  unique key  `AK_ManagerMail` (`Email`),
@@ -70,8 +69,9 @@ create table `Manager`
 CREATE TABLE `Group`
 (
   `Student`          int not null,
-  `PracticeYear`     date not null,
+  `PracticeYear`     year not null,
   `CompanyName`      varchar(225)  not null,
+  `Head`           bool,
 
  primary key (`Student`, `PracticeYear`),
  foreign key (`Student`) references Student (`StudentID`)
@@ -86,10 +86,10 @@ create table Practice
 (
  `TreatmentNumber` 			   varchar(30) not null
    primary key,
- `TreatmentNumberCompany`	 varchar(30),
  `StartDate`               date,
  `EndDate`                 date,
  `Mark`						         tinyint,
+ `RecomendedMark`					 tinyint,
  `Task`						         text,
  `Report`					         bool,
  `Student`				         int not null,
