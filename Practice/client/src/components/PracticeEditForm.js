@@ -24,6 +24,7 @@ class PracticeEditForm extends Component {
         };
 
         this.handleChange = this.handleChange.bind(this);
+        this.handleDelete = this.handleDelete.bind(this);
     }
 
     getDate = (date) => {
@@ -51,10 +52,10 @@ class PracticeEditForm extends Component {
             .catch(err => alert(err))
     };
 
-    handleDelete = () => {
+    handleDelete(){
         this.api.fetch('/practice/delete',{
             method:"POST",
-            body:JSON.stringify(this.state.number)
+            body:JSON.stringify({number:this.state.number})
         })
             .then( data => {
                 if(data.ok){
@@ -64,7 +65,7 @@ class PracticeEditForm extends Component {
                 }
             })
             .catch(err => alert(err))
-    }
+    };
 
 
     searchStudents = (name) =>{
@@ -165,7 +166,7 @@ class PracticeEditForm extends Component {
                     </Form.Group>
                     <Form.Group>
                         <Form.Button content='Обновить практику' onClick={this.handleSubmit}/>
-                        <Form.Button content='Удалить практику' onСlick={this.handleDelete}/>
+                        <Form.Button content='Удалить практику' onClick={this.handleDelete}/>
                     </Form.Group>
 
                 </Form>
