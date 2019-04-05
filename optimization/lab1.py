@@ -9,7 +9,7 @@ def makeData():
     y = arange(-10, 10, 0.1)
     x_1, y_1 = meshgrid(x, y)
 
-    z_1 = x_1**2 + y_1**2 - 1/2 * x_1 * y_1
+    z_1 = 158 * (x_1**2 - y_1)**2 + 2 * (x_1 - 1)**2 + 40
     return x_1, y_1, z_1
 
 
@@ -30,5 +30,5 @@ axes.plot_surface(x, y, z, cmap=plt.cm.coolwarm)
 # cset = axes.contour(x, y, z, [1, 4, 9, 16], cmap=plt.cm.coolwarm)
 
 plt.show()
-
+#plt.savefig('plt.png', bbox_inches='tight')
 

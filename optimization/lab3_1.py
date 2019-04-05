@@ -62,7 +62,7 @@ def half_division(left, right, iter=0):
         return half_division(x, right, iter+1)
 
 
-def gold_section(left, right, iter=0):
+def gold_section(f, left, right, iter=0):
     phi = (1 + math.sqrt(5)) / 2
     dest = right - left
     if dest < eps:
@@ -73,9 +73,9 @@ def gold_section(left, right, iter=0):
     y2 = f(x2)
 
     if y1 >= y2:
-        return gold_section(x1, right, iter+1)
+        return gold_section(f, x1, right, iter+1)
     else:
-        return gold_section(left, x2, iter+1)
+        return gold_section(f, left, x2, iter+1)
 
 
 @lru_cache()
@@ -132,8 +132,11 @@ def plot_f():
 
 
 a, b = svenn(-2)
-print(a, b)
+print(gold_section(f, a, b))
+'''
 print(half_division(a, b))
-print(gold_section(a, b))
+print(a, b)
+
 print(fib_method(a, b))
 plot_f()
+'''
